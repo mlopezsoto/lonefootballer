@@ -20,3 +20,16 @@ App to help young footballers with trials, training and other football related t
 
 
 ## Access Patterns
+
+
+
+## Developer Info
+### AWS Helpful commands
+
+#### The following command displays your default account information, including the account number: 
+- aws sts get-caller-identity
+- aws sts get-caller-identity --profile prod
+
+#### To display the default Region, use aws configure get.
+- aws configure get region
+- aws configure get region --profile prod
