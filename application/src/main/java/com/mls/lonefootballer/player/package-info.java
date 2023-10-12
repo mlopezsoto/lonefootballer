@@ -1,4 +1,4 @@
 /**
  * Users basic operations, including CRUD operations.
  */
-package com.mls.lonefootballer.user;
+package com.mls.lonefootballer.player;

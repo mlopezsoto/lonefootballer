@@ -1,4 +1,4 @@
-CREATE TABLE users (
+             CREATE TABLE users (
   id SERIAL PRIMARY KEY not null,
   username VARCHAR(100) not null,
   firstname VARCHAR(100) not null,
