@@ -33,3 +33,10 @@ App to help young footballers with trials, training and other football related t
 #### To display the default Region, use aws configure get.
 - aws configure get region
 - aws configure get region --profile prod
+
+#### Lambda
+### CDK
+
+#### Creates a ZIP file with the application. 
+mvn clean package
+

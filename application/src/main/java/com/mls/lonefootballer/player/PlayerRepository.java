@@ -48,6 +48,22 @@ public class PlayerRepository  {
                 "Strikers",
                 "http://youtube.com/mychannel");
 
-        players = List.of(p1, p2);
+        PlayerRecord p3 = new PlayerRecord("Patricia Gomez",
+                "Juggler",
+                "pgomez@gmail.com",
+                "Colombia",
+                "Medellin",
+                "Antioquia",
+                "64605",
+                "88888888",
+                "LB",
+                "Right",
+                true,
+                "10/10/2009",
+                "Female",
+                "Weston",
+                "http://youtube.com/mychannel");
+
+        players = List.of(p1, p2, p3);
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/player")
+@RequestMapping("/players")
 public class PlayerController {
 
     private final PlayerService playerService;
@@ -16,7 +16,7 @@ public class PlayerController {
         this.playerService = playerService;
     }
 
-    @GetMapping("/getAll")
+    @GetMapping(path = {"", "/"}    )
     public List<PlayerRecord> getAllUsers() {
         return playerService.findAllPlayers();
     }
