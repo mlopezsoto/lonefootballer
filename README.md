@@ -18,4 +18,4 @@ This is easy to deploy and test on your own AWS Account.
 2. Deploy to AWS. You will need a AWS account. To deploy to you aws account run:  `>cdk deploy`
 AT the end of the deployment, you will see the URL where you app is available, i.e. LoneFootballerCdk-Stack.LoneFootballerAPIEndpointFBD628AE = https://id123456.execute-api.ap-southeast-2.amazonaws.com/dev/
 
-NOTE: Currently the AWS region is hardcoded to ap-southeast-2. Update the code if you want to deploy to a different region.  
+NOTE: Currently the AWS region and AWS account are hardcoded. Update the code if you want to deploy to a different region and using your account.  
