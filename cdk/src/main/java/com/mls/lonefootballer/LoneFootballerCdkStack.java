@@ -1,6 +1,7 @@
 package com.mls.lonefootballer;
 
 import software.amazon.awscdk.CfnOutput;
+import software.amazon.awscdk.Duration;
 import software.amazon.awscdk.Stack;
 import software.amazon.awscdk.StackProps;
 import software.amazon.awscdk.services.apigateway.*;
@@ -19,12 +20,12 @@ public class LoneFootballerCdkStack extends Stack {
     public LoneFootballerCdkStack(final Construct parent, final String id, final StackProps props) {
         super(parent, id, props);
 
-        buildDynamoDbTable();
-        buildAndDeployLambda();
+        Function loneFootballerLambda = buildAndDeployLambda();
+        buildDynamoDbTable(loneFootballerLambda);
 
     }
 
-    private void buildAndDeployLambda() {
+    private Function buildAndDeployLambda() {
 
         Function loneFootballerHandler = Function.Builder.create(this, "LoneFootballer-LambdaFunction")
                 .functionName("LoneFootballer")
@@ -32,6 +33,7 @@ public class LoneFootballerCdkStack extends Stack {
                 .code(Code.fromAsset("../application/target/lonefootballer-api-0.0.1-SNAPSHOT-lambda-package.zip"))
                 .handler("com.mls.lonefootballer.StreamLambdaHandler::handleRequest")
                 .snapStart(ON_PUBLISHED_VERSIONS)
+                .timeout(Duration.seconds(60))
                 .build();
 
         // Publish a version of the Lambda function, needed for SnapStart. Invoking the below method creates a version.
@@ -61,10 +63,11 @@ public class LoneFootballerCdkStack extends Stack {
                 .build());
 
         CfnOutput.Builder.create(this, "Invoke URL").value(api.getDeploymentStage().urlForPath());
+        return loneFootballerHandler;
 
     }
 
-    private void buildDynamoDbTable() {
+    private void buildDynamoDbTable(Function loneFootballerLambda) {
         var tableName = "LoneFootballer";
 
         TableV2 table = TableV2.Builder.create(this, tableName + "-DynamoDbTable")
@@ -91,6 +94,8 @@ public class LoneFootballerCdkStack extends Stack {
                         .build()))
                 .billing(Billing.onDemand())
                 .build();
+
+        table.grantReadWriteData(loneFootballerLambda);
         CfnOutput.Builder.create(this, "Table ID").value(table.getTableId()).build();
 
     }

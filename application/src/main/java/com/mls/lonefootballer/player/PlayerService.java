@@ -4,5 +4,9 @@ import java.util.List;
 
 public interface PlayerService {
 
-    List<PlayerRecord> findAllPlayers();
+    List<PlayerEntity> findAllPlayers();
+
+    PlayerEntity save(PlayerEntity playerEntity);
+
+    PlayerEntity find(String playerId);
 }

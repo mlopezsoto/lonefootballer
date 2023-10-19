@@ -12,8 +12,18 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public List<PlayerRecord> findAllPlayers() {
+    public List<PlayerEntity> findAllPlayers() {
         return playerRepository.findAll();
+    }
+
+    @Override
+    public PlayerEntity save(PlayerEntity playerEntity) {
+        return playerRepository.save(playerEntity);
+    }
+
+    @Override
+    public PlayerEntity find(String playerId) {
+        return playerRepository.findById(playerId);
     }
 
 }

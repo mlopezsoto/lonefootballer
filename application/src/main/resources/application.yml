@@ -1,2 +1,7 @@
 logging:
+  level:
     root: info
+
+lonefootballer:
+  dynamo-db:
+    table-name: 'LoneFootballer'

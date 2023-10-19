@@ -1,11 +1,22 @@
 package com.mls.lonefootballer.player;
 
+import com.mls.lonefootballer.data.DynamoBaseEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 
 @Data
-public class PlayerEntity {
+@DynamoDbBean
+@ToString(callSuper = true)
+@EqualsAndHashCode(callSuper = true)
+public class PlayerEntity extends DynamoBaseEntity {
 
-    private String name;
+    public static final String PLAYER_PREFIX = "PLAYER";
+
+    private String firstName;
+
+    private String lastName;
 
     private String intro;
 

@@ -1,69 +1,76 @@
 package com.mls.lonefootballer.player;
 
+import com.github.f4b6a3.ulid.UlidCreator;
 import jakarta.annotation.PostConstruct;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
+import software.amazon.awssdk.enhanced.dynamodb.Expression;
+import software.amazon.awssdk.enhanced.dynamodb.Key;
+import software.amazon.awssdk.enhanced.dynamodb.model.Page;
+import software.amazon.awssdk.enhanced.dynamodb.model.PageIterable;
+import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
+import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
+import static com.mls.lonefootballer.data.Constants.DYNAMO_DATA_DELIMITER;
+import static com.mls.lonefootballer.player.PlayerEntity.PLAYER_PREFIX;
+
+@Slf4j
 @Repository
 public class PlayerRepository  {
 
-    private List<PlayerRecord> players;
+    private final DynamoDbTable<PlayerEntity> playerEntityDynamoTable;
 
-    public List<PlayerRecord> findAll() {
-        return players;
+
+    public PlayerRepository(DynamoDbTable<PlayerEntity> playerEntityDynamoTable) {
+        this.playerEntityDynamoTable = playerEntityDynamoTable;
     }
 
-    @PostConstruct
-    private void loadPlayers() {
-        PlayerRecord p1 = new PlayerRecord("Jose Aldo",
-                "Great striker",
-                "jaldo@gmail.com",
-                "Australia",
-                "Muswellbrook",
-                "NSW",
-                "2333",
-                "123456789",
-                "CAM",
-                "Both",
-                true,
-                "10/10/2008",
-                "Male",
-                "Eagles",
-                null);
+    public PlayerEntity save(final PlayerEntity player) {
+        if(Objects.isNull(player)) {
+            return null;
+        }
 
-        PlayerRecord p2 = new PlayerRecord("Carla Perez",
-                "Loves running",
-                "carla@gmail.com",
-                "Australia",
-                "Muswellbrook",
-                "NSW",
-                "2333",
-                "987654321",
-                "GK",
-                "Left",
-                true,
-                "10/10/2008",
-                "Female",
-                "Strikers",
-                "http://youtube.com/mychannel");
+        if(Objects.isNull(player.getPartitionKey())) {
+            player.setPartitionKey(PLAYER_PREFIX);
+            player.setSortKey(PLAYER_PREFIX + DYNAMO_DATA_DELIMITER + UlidCreator.getUlid().toString());
+        }
 
-        PlayerRecord p3 = new PlayerRecord("Patricia Gomez",
-                "Juggler",
-                "pgomez@gmail.com",
-                "Colombia",
-                "Medellin",
-                "Antioquia",
-                "64605",
-                "88888888",
-                "LB",
-                "Right",
-                true,
-                "10/10/2009",
-                "Female",
-                "Weston",
-                "http://youtube.com/mychannel");
+        player.setGsiPartitionKey(player.getAddressCountry());
+        player.setGsiSortKey(player.getAddressPostCode());
 
-        players = List.of(p1, p2, p3);
+        log.info("Before saving item");
+        playerEntityDynamoTable.putItem(player);
+        log.info("After saving item");
+        return player;
+    }
+
+    public PlayerEntity findById(final String playerID) {
+        // Construct the key with partition and sort key
+        Key key = Key.builder().partitionValue(PLAYER_PREFIX)
+                .sortValue(playerID)
+                .build();
+
+        log.info("Before retrieving item");
+        PlayerEntity playerEntity = playerEntityDynamoTable.getItem(key);
+        log.info("After retrieving item");
+
+        return playerEntity;
+    }
+
+    public List<PlayerEntity> findAll() {
+        QueryConditional allPLayerConditional = QueryConditional.keyEqualTo(builder -> builder.partitionValue(PLAYER_PREFIX));
+        QueryEnhancedRequest allPlayersQuery = QueryEnhancedRequest.builder()
+                .queryConditional(allPLayerConditional).build();
+
+        // Query the table
+        log.info("Before retrieving items");
+        PageIterable<PlayerEntity> players = playerEntityDynamoTable.query(allPlayersQuery);
+        log.info("After retrieving items");
+        return players.stream().flatMap(playerEntityPage -> playerEntityPage.items().stream()).collect(Collectors.toList());
     }
 }
