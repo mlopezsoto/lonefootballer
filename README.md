@@ -10,7 +10,7 @@ Infrastructure: AWS API Gateway, AWS Lambda, AWS DynamoDB.
 
 Project is divided in two modules:
 - application: REST API developed using Java 17, Spring Boot and AWS DynamoDB.
-- sdk: This infrastructure-as-code app deploys the application to AWS. It uses API Gateway, AWS Lambda and DynamoDB.
+- cdk: This infrastructure-as-code app deploys the application to AWS. It uses API Gateway, AWS Lambda and DynamoDB.
 
 ### Deploy a Spring Boot app to AWS API Gateway and AWS Lambda
 To deploy a Spring Boot 3 serverless we use [aws-serverless-java-container](https://github.com/awslabs/aws-serverless-java-container/wiki/Quick-start---Spring-Boot3) 
