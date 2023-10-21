@@ -3,5 +3,7 @@ logging:
     root: info
 
 lonefootballer:
+  aws-account:
+
   dynamo-db:
     table-name: 'LoneFootballer'

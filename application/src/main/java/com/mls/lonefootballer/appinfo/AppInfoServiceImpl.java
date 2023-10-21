@@ -7,7 +7,6 @@ public class AppInfoServiceImpl implements AppInfoService {
 
     private final Properties appProperties;
 
-
     public AppInfoServiceImpl() throws IOException {
         appProperties = new Properties();
         appProperties.load(getClass().getResourceAsStream("/maven.properties"));

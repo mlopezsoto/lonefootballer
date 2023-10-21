@@ -4,9 +4,13 @@ import java.util.List;
 
 public interface PlayerService {
 
-    List<PlayerEntity> findAllPlayers();
+    List<PlayerEntity> findAll();
+
+    List<PlayerEntity> findAllByCountryAndPostCode(String country, String postCode);
 
     PlayerEntity save(PlayerEntity playerEntity);
 
-    PlayerEntity find(String playerId);
+    PlayerEntity findById(String playerId);
+
+    PlayerEntity delete(String playerId);
 }

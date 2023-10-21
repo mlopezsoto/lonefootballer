@@ -1,8 +1,5 @@
 package com.mls.lonefootballer.player;
 
-import com.amazonaws.services.lambda.runtime.Context;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,18 +16,28 @@ public class PlayerController {
         this.playerService = playerService;
     }
 
-    @GetMapping(path = {"", "/"}    )
-    public List<PlayerEntity> getAllUsers() {
-        return playerService.findAllPlayers();
+    @GetMapping(path = {"", "/"})
+    public List<PlayerEntity> findAll() {
+        return playerService.findAll();
+    }
+
+    @GetMapping(path = {"/country/{country}/postcode/{postCode}"})
+    public List<PlayerEntity> findByCountryAndPostCode(@PathVariable String country, @PathVariable String postCode) {
+        return playerService.findAllByCountryAndPostCode(country, postCode);
     }
 
     @GetMapping(path = {"/{id}"}    )
-    public PlayerEntity find(@PathVariable String id) {
-        return playerService.find(id);
+    public PlayerEntity findById(@PathVariable String id) {
+        return playerService.findById(id);
     }
 
     @PostMapping
     public PlayerEntity save(@RequestBody PlayerEntity playerEntity) {
         return playerService.save(playerEntity);
+    }
+
+    @DeleteMapping(path = {"/{id}"}    )
+    public PlayerEntity delete(@PathVariable String id) {
+        return playerService.delete(id);
     }
 }

@@ -13,6 +13,6 @@ It is a [Maven](https://maven.apache.org/) based project, so you can open this p
  * `cdk diff`        compare deployed stack with current state
  * `cdk docs`        open CDK documentation
 
-###
-To deploy updates to the code, create a ZIP or JAR file using maven on the application project, then run cdk deploy again. 
+### Deploying new versions of the app
+To deploy updates to the code, create a ZIP or JAR file using maven on the application project (`mvn clean package`), then run cdk deploy again. 
 CDK is smart enough to detect changes in the ZIP or JAR file and will upload the new code to the Lambda function.

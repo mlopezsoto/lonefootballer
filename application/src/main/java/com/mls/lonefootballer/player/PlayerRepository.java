@@ -4,6 +4,7 @@ import com.github.f4b6a3.ulid.UlidCreator;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import software.amazon.awssdk.enhanced.dynamodb.DynamoDbIndex;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Expression;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
@@ -13,11 +14,14 @@ import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.mls.lonefootballer.data.Constants.DYNAMO_DATA_DELIMITER;
 import static com.mls.lonefootballer.player.PlayerEntity.PLAYER_PREFIX;
+import static software.amazon.awssdk.enhanced.dynamodb.internal.AttributeValues.numberValue;
+import static software.amazon.awssdk.enhanced.dynamodb.internal.AttributeValues.stringValue;
 
 @Slf4j
 @Repository
@@ -49,6 +53,17 @@ public class PlayerRepository  {
         return player;
     }
 
+    public PlayerEntity delete(final String playerID) {
+        Key key = Key.builder().partitionValue(PLAYER_PREFIX)
+                .sortValue(playerID)
+                .build();
+
+        log.info("Before deleting item");
+        PlayerEntity playerEntity = playerEntityDynamoTable.deleteItem(key);
+        log.info("After deleting item");
+        return playerEntity;
+    }
+
     public PlayerEntity findById(final String playerID) {
         // Construct the key with partition and sort key
         Key key = Key.builder().partitionValue(PLAYER_PREFIX)
@@ -66,6 +81,27 @@ public class PlayerRepository  {
         QueryConditional allPLayerConditional = QueryConditional.keyEqualTo(builder -> builder.partitionValue(PLAYER_PREFIX));
         QueryEnhancedRequest allPlayersQuery = QueryEnhancedRequest.builder()
                 .queryConditional(allPLayerConditional).build();
+
+        // Query the table
+        log.info("Before retrieving items");
+        PageIterable<PlayerEntity> players = playerEntityDynamoTable.query(allPlayersQuery);
+        log.info("After retrieving items");
+        return players.stream().flatMap(playerEntityPage -> playerEntityPage.items().stream()).collect(Collectors.toList());
+    }
+
+    public List<PlayerEntity> findAllByCountryAndPostCode(String country, String postCode) {
+        QueryConditional allPLayerConditional = QueryConditional.keyEqualTo(builder -> builder.partitionValue(PLAYER_PREFIX));
+
+        QueryEnhancedRequest allPlayersQuery = QueryEnhancedRequest.builder()
+                .queryConditional(allPLayerConditional)
+                .filterExpression(Expression.builder()
+                        .expression("addressCountry = :country AND addressPostCode = :postCode")
+                        .expressionValues(
+                                Map.of( ":country", stringValue(country),
+                                        ":postCode", stringValue(postCode)))
+                        .build())
+                .build();
+
 
         // Query the table
         log.info("Before retrieving items");

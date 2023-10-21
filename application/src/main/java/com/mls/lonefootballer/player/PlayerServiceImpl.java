@@ -12,8 +12,13 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public List<PlayerEntity> findAllPlayers() {
+    public List<PlayerEntity> findAll() {
         return playerRepository.findAll();
+    }
+
+    @Override
+    public List<PlayerEntity> findAllByCountryAndPostCode(String country, String postCode) {
+        return playerRepository.findAllByCountryAndPostCode(country, postCode);
     }
 
     @Override
@@ -22,8 +27,13 @@ public class PlayerServiceImpl implements PlayerService {
     }
 
     @Override
-    public PlayerEntity find(String playerId) {
+    public PlayerEntity findById(String playerId) {
         return playerRepository.findById(playerId);
+    }
+
+    @Override
+    public PlayerEntity delete(String playerId) {
+        return playerRepository.delete(playerId);
     }
 
 }

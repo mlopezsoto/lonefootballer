@@ -14,7 +14,6 @@ public class DynamoDbConfig {
     @Bean
     public DynamoDbClient getDynamoDbClient() {
         return DynamoDbClient.builder()
-                .region(Region.AP_SOUTHEAST_2)
                 .build();
     }
 

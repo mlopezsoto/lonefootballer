@@ -3,6 +3,6 @@ logging:
     root: info
 
 lonefootballer:
-  dynamoDb:
-    tableName: 'LoneFootballer'
+  dynamo-db:
+    table-name: 'LoneFootballer'
 

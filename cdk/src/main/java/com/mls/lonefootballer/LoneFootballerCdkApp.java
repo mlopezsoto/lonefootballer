@@ -13,8 +13,6 @@ public final class LoneFootballerCdkApp {
                 .stackName(stackId)
                 .description("Lone Footballer stack")
                 .env(Environment.builder()
-                        .account("845831624882")
-                        .region("ap-southeast-2")
                         .build())
                 .build();
 
