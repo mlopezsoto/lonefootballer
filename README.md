@@ -17,8 +17,8 @@ To deploy a Spring Boot 3 serverless we use [aws-serverless-java-container](http
 
 ## Test it on AWS
 This is easy to deploy and test using your own AWS Account.
-1. Build the app using maven. Go to application folder and run: `>mvn clean package` This will create a zip file in your target directory.
-2. Deploy to AWS. You will need a AWS account. To deploy to you aws account run:  `>cdk deploy`
+1. Build the app using maven. Go to *application* folder and run: `>mvn clean package` This will create a zip file in your target directory.
+2. Deploy to AWS. You will need a AWS account. To deploy to you aws account go to folder *cdk* and run:  `>cdk deploy`
 At the end of the deployment, you will see the URL where your app is available, i.e. LoneFootballerCdk-Stack.LoneFootballerAPIEndpointFBD628AE = https://id123456.execute-api.ap-southeast-2.amazonaws.com/dev/
 
 You can get create players using `POST <url>/players`
